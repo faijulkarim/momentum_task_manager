@@ -1,0 +1,233 @@
+/* ==========================================================================
+   MOMENTUM — animations.css
+   All @keyframes and motion-only utility classes live here.
+   Referenced as css/animations.css from index.html (plural, matches
+   the <link> tag already in the markup).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   PAGE / PANEL ENTRANCE
+   -------------------------------------------------------------------------- */
+@keyframes fadeIn{
+  from{ opacity: 0; }
+  to{ opacity: 1; }
+}
+
+@keyframes fadeSlideUp{
+  from{ opacity: 0; transform: translateY(10px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn{
+  from{ opacity: 0; transform: scale(0.94); }
+  to{ opacity: 1; transform: scale(1); }
+}
+
+.add-task-panel{
+  animation: fadeSlideUp var(--transition-base) ease both;
+}
+
+.list-toolbar{
+  animation: fadeIn var(--transition-base) ease both;
+  animation-delay: 60ms;
+}
+
+/* --------------------------------------------------------------------------
+   TASK ITEM — enter / complete / delete
+   -------------------------------------------------------------------------- */
+@keyframes taskEnter{
+  from{ opacity: 0; transform: translateY(8px) scale(0.98); }
+  to{ opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.task-item{
+  animation: taskEnter 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes taskLeave{
+  from{ opacity: 1; transform: translateX(0) scale(1); max-height: 200px; }
+  to{ opacity: 0; transform: translateX(24px) scale(0.96); max-height: 0; margin: 0; padding-top: 0; padding-bottom: 0; }
+}
+
+.task-item.is-leaving{
+  animation: taskLeave 260ms ease forwards;
+  overflow: hidden;
+}
+
+@keyframes checkPop{
+  0%{ transform: scale(1); }
+  40%{ transform: scale(1.15); }
+  100%{ transform: scale(1); }
+}
+
+.task-item__checkbox.is-popping{
+  animation: checkPop 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes checkDraw{
+  from{ stroke-dashoffset: 20; }
+  to{ stroke-dashoffset: 0; }
+}
+
+.task-item__checkbox svg path{
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+}
+
+.task-item.is-completed .task-item__checkbox svg path{
+  animation: checkDraw 260ms ease forwards 40ms;
+}
+
+@keyframes titleStrike{
+  from{ background-size: 0% 2px; }
+  to{ background-size: 100% 2px; }
+}
+
+/* Undo pulse — brief highlight when a completed task is restored */
+@keyframes undoPulse{
+  0%{ background-color: var(--accent-soft); }
+  100%{ background-color: transparent; }
+}
+
+.task-item.is-undone{
+  animation: undoPulse 900ms ease;
+}
+
+/* --------------------------------------------------------------------------
+   BUTTONS & INTERACTIVE FEEDBACK
+   -------------------------------------------------------------------------- */
+@keyframes pressRipple{
+  from{ opacity: 0.35; transform: scale(0); }
+  to{ opacity: 0; transform: scale(2.2); }
+}
+
+.btn{ position: relative; overflow: hidden; }
+
+.sidebar-toggle svg,
+.icon-btn svg{
+  transition: transform var(--transition-fast);
+}
+
+.icon-btn:active svg{ transform: scale(0.88); }
+
+/* --------------------------------------------------------------------------
+   SIDEBAR / DRAWER
+   -------------------------------------------------------------------------- */
+@keyframes drawerIn{
+  from{ transform: translateX(-100%); }
+  to{ transform: translateX(0); }
+}
+
+/* transform transition already handled inline in responsive.css via
+   .app-shell.sidebar-open .sidebar — this keyframe is available for
+   ui.js if a one-shot animation class is preferred over the transition */
+
+/* --------------------------------------------------------------------------
+   LOADING SPINNER
+   -------------------------------------------------------------------------- */
+@keyframes spin{
+  to{ transform: rotate(360deg); }
+}
+
+.spinner{
+  animation: spin 700ms linear infinite;
+}
+
+/* Skeleton shimmer, available if ui.js renders placeholder rows while
+   tasks are read from storage on first paint */
+@keyframes shimmer{
+  0%{ background-position: -240px 0; }
+  100%{ background-position: 240px 0; }
+}
+
+.skeleton-row{
+  height: 64px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, var(--surface-2) 0%, var(--surface-hover) 50%, var(--surface-2) 100%);
+  background-size: 480px 100%;
+  animation: shimmer 1.3s ease-in-out infinite;
+}
+
+/* --------------------------------------------------------------------------
+   EMPTY STATE
+   -------------------------------------------------------------------------- */
+@keyframes floatY{
+  0%, 100%{ transform: translateY(0); }
+  50%{ transform: translateY(-6px); }
+}
+
+.empty-state{
+  animation: fadeIn var(--transition-base) ease both;
+}
+
+.empty-state__illustration{
+  animation: floatY 3.2s ease-in-out infinite;
+}
+
+/* --------------------------------------------------------------------------
+   MODAL / DIALOG
+   -------------------------------------------------------------------------- */
+@keyframes modalIn{
+  from{ opacity: 0; transform: translateY(12px) scale(0.97); }
+  to{ opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes backdropIn{
+  from{ opacity: 0; }
+  to{ opacity: 1; }
+}
+
+.modal[open]{
+  animation: modalIn 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.modal[open]::backdrop{
+  animation: backdropIn 220ms ease;
+}
+
+/* --------------------------------------------------------------------------
+   TOASTS
+   -------------------------------------------------------------------------- */
+@keyframes toastIn{
+  from{ opacity: 0; transform: translateY(12px) scale(0.96); }
+  to{ opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes toastOut{
+  from{ opacity: 1; transform: translateY(0) scale(1); max-height: 80px; }
+  to{ opacity: 0; transform: translateY(6px) scale(0.96); max-height: 0; margin: 0; }
+}
+
+.toast{
+  animation: toastIn 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  overflow: hidden;
+}
+
+.toast.is-leaving{
+  animation: toastOut 200ms ease forwards;
+}
+
+/* --------------------------------------------------------------------------
+   PROGRESS BAR
+   -------------------------------------------------------------------------- */
+.progress-bar__fill{
+  transition: width 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* --------------------------------------------------------------------------
+   REDUCED MOTION — final safety net (also enforced in responsive.css)
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce){
+  .add-task-panel,
+  .list-toolbar,
+  .task-item,
+  .empty-state,
+  .empty-state__illustration,
+  .spinner,
+  .skeleton-row,
+  .modal[open],
+  .modal[open]::backdrop,
+  .toast{
+    animation: none !important;
+  }
+}
